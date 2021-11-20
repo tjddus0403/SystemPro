@@ -10,7 +10,7 @@ int main()
 	int (*close)(kvs_t*);
 	char* error;
 
-	handle=dlopen("./libkvs.so", RTLD_LAZY);
+	handle=dlopen("libkvs.so", RTLD_LAZY);
 	if(!handle){
 		fprintf(stderr, "%s\n", dlerror());
 		exit(1);

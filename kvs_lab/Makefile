@@ -10,6 +10,10 @@ OBJS = $(SRCS:.c=.o)
 LOBJS = $(LIBSRCS:.c=.o)
 LARS = libkvs.a
 
+SRCS_D=dynamic_main.c
+TARG_D=kvs_dynamic
+LARS_D=libkvs.so
+
 
 all: 
 
@@ -25,8 +29,12 @@ $(LARS) : $(LOBJS)
 	$(CC) $(OPTS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS) $(LOBJS) $(LARS) $(TARG) kvs_dynamic libkvs.so
+	rm -f $(OBJS) $(LOBJS) $(LARS) $(TARG) $(LARS_D) $(TARG_D)
 
-dynamic:
-	$(CC) -shared -o libkvs.so $(LIBSRCS)
-	$(CC) -fPIC -o kvs_dynamic dynamic_main.c -ldl
+dynamic: $(TARG_D)
+
+$(TARG_D) : $(OBJS) $(LARS_D)
+	$(CC) -fPIC -o $(TARG_D) $(SRCS_D) -ldl
+
+$(LARS_D) : 
+	$(CC) -shared -o $(LARS_D) $(LIBSRCS)
