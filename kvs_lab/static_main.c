@@ -13,29 +13,29 @@ int main()
 	char* value = (char*) malloc (sizeof(char)* 300);
 	char* rvalue;
 	
-	FILE* fp=fopen("student.dat", "r+");
+	FILE* fp=fopen("student.dat", "r");
 
         if(!fp){
                 printf("Failed to open file\n");
                 return -1;
         }
 
-        while(1){
-                if(feof(fp)!=0) break;
-
+        while(!feof(fp)){
                 if(!(fscanf(fp, "%s %s\n", key, value)))
                         printf("Cannot load data\n");
 
                 put(kvs, key, value);
-
         }
-        fclose(fp);
+	
+	fclose(fp);
 
 	fp=fopen("student.dat", "r");
+
 	if(!fp){
-		printf("Failed to open file\n");
-		return -1;
-	}
+                printf("Failed to open file\n");
+                return -1;
+        }
+
 	while(!feof(fp)){
 		if(!(fscanf(fp, "%s %s\n", key, value)))
 			printf("Cannot load data\n");
@@ -45,6 +45,8 @@ int main()
        		 }
 		printf("get: %s, %s\n", key, rvalue);
 	}
+
+	fclose(fp);
 
 	close(kvs);
 	return 0;
