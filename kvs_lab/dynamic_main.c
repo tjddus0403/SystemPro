@@ -37,7 +37,24 @@ int main()
 	char key[100];
 	char* value=(char*) malloc (sizeof(char)*300);
 	char* rvalue;
+	
+	FILE* fp=fopen("student.dat", "r+");
 
+        if(!fp){
+                printf("Failed to open file\n");
+                return -1;
+        }
+
+        while(1){
+                if(feof(fp)!=0) break;
+
+                if(!(fscanf(fp, "%s %s\n", key, value)))
+                        printf("Cannot load data\n");
+
+                put(kvs, key, value);
+
+        }
+        fclose(fp);
 
 	get=dlsym(handle, "get");
 	if((error=dlerror())!=NULL){
@@ -45,7 +62,7 @@ int main()
 		exit(1);
 	}
 
-	FILE* fp=fopen("student.dat", "r");
+	fp=fopen("student.dat", "r");
 
 	if(!fp){
 		printf("Failed to open file\n");
@@ -53,7 +70,8 @@ int main()
 	}
 
 	while(!feof(fp)){
-		fscanf(fp, "%s %s\n", key, value);
+		if(!(fscanf(fp, "%s %s\n", key, value)))
+			printf("Cannot load data\n");
 		if(!(rvalue=get(kvs, key))){
 	                printf("Failed to get data\n");
         	        exit(-1);
